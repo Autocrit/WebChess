@@ -89,8 +89,7 @@ function update_number() {
 		matrix += "\n";
 	}
 	let str = number.toString(16);
-	//str = str.padStart(16, '0');
-	str = str.toUpperCase();
+	str = "0x" + str.toUpperCase();
 	//str += "\n\n0b" + number.toString(2) ;
 	number_element.value = str;
 }
