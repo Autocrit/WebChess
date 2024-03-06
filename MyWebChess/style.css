@@ -2,6 +2,11 @@
 	--square-size: 70px;
 	--board-size: calc(var(--square-size) * 8);
 	--piece-size: calc(var(--square-size) * 0.65);
+	--capture-move: rgb(255, 0, 0, .3);
+	--castle-move: rgba(255, 255, 0, 0.3);
+	--ep-move: rgb(0, 255, 0, .3);
+	--promote-move: rgb(255, 0, 0, .3);
+	--move: rgba(4, 204, 249, 0.3);
 }
 
 body {
@@ -19,8 +24,8 @@ body {
 	width: var(--board-size);
 	height: var(--board-size);
 	display: flex;
-	flex-wrap: wrap-reverse;
-	/*flex-wrap: wrap;*/
+	/*flex-wrap: wrap-reverse;*/
+	flex-wrap: wrap;
 }
 
 .square {
@@ -56,11 +61,11 @@ path {
 }
 
 .white-square {
-	background-color: rgb(161, 161, 161);
+	background-color: rgb(238, 238, 238);
 }
 
 .black-square {
-	background-color: rgb(77, 77, 77);
+	background-color: rgb(162, 162, 162);
 }
 
 .black-piece {
@@ -69,4 +74,14 @@ path {
 
 .white-piece {
 	fill: white;
+}
+
+.overlay {
+	position: fixed;
+	display: none;
+	width: var(--square-size);
+	height: var(--square-size);
+	background-color: rgba(4, 204, 249, 0.3);
+	/*z-index: 2;
+	cursor: pointer;*/
 }

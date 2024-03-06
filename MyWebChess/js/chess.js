@@ -177,6 +177,8 @@ class Board {
 		this.reset();
 	}
 
+	static start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
 	clear() {
 		this.color = [];
 		this.piece = [];
