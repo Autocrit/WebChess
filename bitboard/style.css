@@ -25,9 +25,22 @@ body {
 	margin: 40px;
 	padding: 40px;
 	gap: 10px;
+	flex-direction: column;
 }
 
-#chessboard {
+.bitboard-row {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	width: 100%;
+	break-inside: avoid;
+	white-space: nowrap;
+	overflow: hidden;
+	align-items: center;
+	gap: 20px;
+}
+
+.bitboard {
 	width: var(--board-size);
 	height: var(--board-size);
 	display: flex;

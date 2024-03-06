@@ -1,4 +1,4 @@
-const board_element = document.querySelector("#chessboard");
+const board_element = document.querySelector("#bitboard");
 const number_element = document.querySelector("#number-input");
 
 number_element.addEventListener("input", (event) => {

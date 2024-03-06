@@ -8,11 +8,15 @@
 </head>
 <body>
 	<div class="bitboard-visualiser">
-		<div id="chessboard"></div>
-		<!--<div id="number-display" class="number" />-->
-		<label for="number-input" class="number-label">Hex:</label>
-		<input type="text" id="number-input" value="0000000000000000" class="number-input" size="25"></input>
+		<div class="bitboard-row">
+			<div id="bitboard" class="bitboard"></div>
+			<div>
+				<label for="number-input" class="number-label">Hex:</label>
+				<input type="text" id="number-input" value="0x0" class="number-input" size="25"></input>
+			</div>
+		</div>
 	</div>
 	<script src="./script.js" type="module"></script>
 </body>
 </html>
+
