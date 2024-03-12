@@ -43,8 +43,8 @@ function render_pieces() {
 
 		// Remove any existing child elements
 		for(let j=0; j<square.children; j++) {
-			if(square.child[j].classList.contains("white-piece") || square.child[j].classList.contains("black-piece")) {
-				square.removeChild(quare.child[j]);
+			if(square.child[j].classList.contains("piece")) {
+				square.removeChild(square.child[j]);
 			}
 		}
 
@@ -57,8 +57,18 @@ function render_pieces() {
 		if(chessboard.color[i] != chess.Color.none) {
 			let piece = document.createElement("div");
 			piece.classList.add("piece");
-			piece.innerHTML = chess.Piece.get_svg(chessboard.piece[i]);
-			piece.firstChild.classList = chessboard.color[i] === chess.Color.white ? "white-piece" : "black-piece";
+			//piece.innerHTML = chess.Piece.get_svg(chessboard.piece[i]);
+			//let png = chess.Piece.get_png(chessboard.color[i], chessboard.piece[i]);
+			//let image = document.createElement("img");
+			//image.src = png;
+			//image.classList.add("piece-img");
+			//piece.append(image);
+			//piece.firstChild.classList = chessboard.color[i] === chess.Color.white ? "white-piece" : "black-piece";
+
+			let span = document.createElement("span");
+			piece.append(span);
+			span.textContent = chess.Piece.unicode(chessboard.color[i], chessboard.piece[i]);
+
 			piece.setAttribute("draggable", "true");
 			square.append(piece);
 		}
@@ -77,16 +87,16 @@ function dragStart(e) {
 	for(let i=0; i<moves.length; i++) {
 		overlay_elements[moves[i].to].style.background = "var(--move)";
 
-		if(moves[i].bits & 1) {
+		if(moves[i].bits & chess.Board.move_type_capture) {
 			overlay_elements[moves[i].to].style.background = "var(--capture-move)";
 		}
-		if(moves[i].bits & 2) {
+		if(moves[i].bits & chess.Board.move_type_castle) {
 			overlay_elements[moves[i].to].style.background = "var(--castle-move)";
 		}
-		if(moves[i].bits & 4) {
+		if(moves[i].bits & chess.Board.move_type_ep) {
 			overlay_elements[moves[i].to].style.background = "var(--ep-move)";
 		}
-		if(moves[i].bits & 32) {
+		if(moves[i].bits & chess.Board.move_type_promote) {
 			overlay_elements[moves[i].to].style.background = "var(--promote-move)";
 		}
 
@@ -135,10 +145,11 @@ function perft() {
 document.addEventListener("DOMContentLoaded", (event) => {
 	create_board();
 
-	//let fen = "4k2r/6r1/8/8/8/8/3R4/R3K3 w Qk - 0 1"; // castle
-	let fen = "4k3/8/8/8/2p5/8/3P4/5K2 w" // ep
+	let fen1 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
+	let fen2 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1";
+	let ep_fen = "4k3/8/8/8/2p5/8/3P4/5K2 w" // ep
 
-	chessboard.set_from_fen(chess.Board.start_fen);
+	chessboard.set_from_fen(fen2);
 
 	render_pieces();
 

@@ -1,4 +1,4 @@
-const debug_moves = false;
+const debug_moves = true;
 
 class Color {
 	static invert(c) {
@@ -146,7 +146,7 @@ class Square {
 }
 */
 
-class Piece {
+class PieceType {
 	static get_svg(piece) {
 		const svg = {
 			[this.pawn]: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M215.5 224c29.2-18.4 48.5-50.9 48.5-88c0-57.4-46.6-104-104-104S56 78.6 56 136c0 37.1 19.4 69.6 48.5 88H96c-17.7 0-32 14.3-32 32c0 16.5 12.5 30 28.5 31.8L80 400H240L227.5 287.8c16-1.8 28.5-15.3 28.5-31.8c0-17.7-14.3-32-32-32h-8.5zM22.6 473.4c-4.2 4.2-6.6 10-6.6 16C16 501.9 26.1 512 38.6 512H281.4c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16L256 432H64L22.6 473.4z"/></svg>',
@@ -158,6 +158,38 @@ class Piece {
 		};
 
 		return svg[piece];
+	}
+
+	static get_png(color, type) {
+		const png = [
+			[
+				"pieces/white_pawn.png",
+				"pieces/white_knight.png",
+				"pieces/white_bishop.png",
+				"pieces/white_rook.png",
+				"pieces/white_queen.png",
+				"pieces/white_king.png"
+			],
+			[
+				"pieces/black_pawn.png",
+				"pieces/black_knight.png",
+				"pieces/black_bishop.png",
+				"pieces/black_rook.png",
+				"pieces/black_queen.png",
+				"pieces/black_king.png"
+			]
+		];
+
+		return png[color][type];
+	}
+
+	static unicode(color, type) {
+		const unicode_pieces = [
+			[ '♙', '♘', '♗', '♖', '♕', '♔' ],
+			[ '♟', '♞', '♝', '♜', '♛', '♚' ]
+		];
+
+		return unicode_pieces[color][type];
 	}
 	
 	static pawn = 0;
@@ -174,10 +206,18 @@ const hist_stack = 400;
 
 class Board {
 	constructor() {
-		this.reset();
+		this.set_from_fen(Board.start_fen);
 	}
 
 	static start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+	// Move type flags
+	static move_type_capture = 1;
+	static move_type_castle = 2;
+	static move_type_ep = 4;
+	static move_type_p2sq = 8;
+	static move_type_pawn = 16;
+	static move_type_promote = 32;
 
 	clear() {
 		this.color = [];
@@ -185,7 +225,7 @@ class Board {
 
 		for(let i=0; i<64; i++) {
 			this.color[i] = Color.none;
-			this.piece[i] = Piece.none;
+			this.piece[i] = PieceType.none;
 		}
 
 		this.castle = 0;
@@ -296,18 +336,18 @@ class Board {
 			}
 			else {
 				switch(token) {
-					case 'p': this.piece[sq] = Piece.pawn; this.color[sq] = Color.black; break;
-					case 'n': this.piece[sq] = Piece.knight; this.color[sq] = Color.black; break;
-					case 'b': this.piece[sq] = Piece.bishop; this.color[sq] = Color.black; break;
-					case 'r': this.piece[sq] = Piece.rook; this.color[sq] = Color.black; break;
-					case 'q': this.piece[sq] = Piece.queen; this.color[sq] = Color.black; break;
-					case 'k': this.piece[sq] = Piece.king; this.color[sq] = Color.black; break;
-					case 'P': this.piece[sq] = Piece.pawn; this.color[sq] = Color.white; break;
-					case 'N': this.piece[sq] = Piece.knight; this.color[sq] = Color.white; break;
-					case 'B': this.piece[sq] = Piece.bishop; this.color[sq] = Color.white; break;
-					case 'R': this.piece[sq] = Piece.rook; this.color[sq] = Color.white; break;
-					case 'Q': this.piece[sq] = Piece.queen; this.color[sq] = Color.white; break;
-					case 'K': this.piece[sq] = Piece.king; this.color[sq] = Color.white; break;
+					case 'p': this.piece[sq] = PieceType.pawn; this.color[sq] = Color.black; break;
+					case 'n': this.piece[sq] = PieceType.knight; this.color[sq] = Color.black; break;
+					case 'b': this.piece[sq] = PieceType.bishop; this.color[sq] = Color.black; break;
+					case 'r': this.piece[sq] = PieceType.rook; this.color[sq] = Color.black; break;
+					case 'q': this.piece[sq] = PieceType.queen; this.color[sq] = Color.black; break;
+					case 'k': this.piece[sq] = PieceType.king; this.color[sq] = Color.black; break;
+					case 'P': this.piece[sq] = PieceType.pawn; this.color[sq] = Color.white; break;
+					case 'N': this.piece[sq] = PieceType.knight; this.color[sq] = Color.white; break;
+					case 'B': this.piece[sq] = PieceType.bishop; this.color[sq] = Color.white; break;
+					case 'R': this.piece[sq] = PieceType.rook; this.color[sq] = Color.white; break;
+					case 'Q': this.piece[sq] = PieceType.queen; this.color[sq] = Color.white; break;
+					case 'K': this.piece[sq] = PieceType.king; this.color[sq] = Color.white; break;
 					default:
 						console.log("Error in fen string (unexpected character): " + fen);
 						return false;
@@ -370,7 +410,7 @@ class Board {
 
 	in_check(s) {
 		for(let i=0; i<64; i++) {
-			if(this.piece[i] == Piece.king && this.color[i] == s)
+			if(this.piece[i] == PieceType.king && this.color[i] == s)
 				return this.attack(i, Color.invert(s));
 		}
 		
@@ -380,7 +420,7 @@ class Board {
 	attack(sq, s) {
 		for(let i=0; i<64; ++i) {
 			if(this.color[i] == s) {
-				if(this.piece[i] == Piece.pawn) {
+				if(this.piece[i] == PieceType.pawn) {
 					if(s == Color.white) {
 						if(Square.col(i) != 0 && i - 9 == sq)
 							return true;
@@ -420,7 +460,7 @@ class Board {
 
 		for(let i=0; i<64; ++i) {
 			if(this.color[i] == this.side) {
-				if(this.piece[i] == Piece.pawn) {
+				if(this.piece[i] == PieceType.pawn) {
 					if(this.side == Color.white) {
 						if(Square.col(i) != 0 && this.color[i - 9] == Color.black)
 							this.gen_push(i, i - 9, 17);
@@ -481,16 +521,24 @@ class Board {
 		/* generate en passant moves */
 		if(this.ep != -1) {
 			if(this.side == Color.white) {
-				if(Square.col(this.ep) != 0 && this.color[this.ep + 7] == Color.white && this.piece[this.ep + 7] == Piece.pawn)
+				if(Square.col(this.ep) != 0 && this.color[this.ep + 7] == Color.white && this.piece[this.ep + 7] == PieceType.pawn)
 					this.gen_push(this.ep + 7, this.ep, 21);
-				if(Square.col(this.ep) != 7 && this.color[this.ep + 9] == Color.white && this.piece[this.ep + 9] == Piece.pawn)
+				if(Square.col(this.ep) != 7 && this.color[this.ep + 9] == Color.white && this.piece[this.ep + 9] == PieceType.pawn)
 					this.gen_push(this.ep + 9, this.ep, 21);
 			}
 			else {
-				if(Square.col(this.ep) != 0 && this.color[this.ep - 9] == Color.black && this.piece[this.ep - 9] == Piece.pawn)
+				if(Square.col(this.ep) != 0 && this.color[this.ep - 9] == Color.black && this.piece[this.ep - 9] == PieceType.pawn)
 					this.gen_push(this.ep - 9, this.ep, 21);
-				if(Square.col(this.ep) != 7 && this.color[this.ep - 7] == Color.black && this.piece[this.ep - 7] == Piece.pawn)
+				if(Square.col(this.ep) != 7 && this.color[this.ep - 7] == Color.black && this.piece[this.ep - 7] == PieceType.pawn)
 					this.gen_push(this.ep - 7, this.ep, 21);
+			}
+		}
+
+		if(debug_moves != undefined) {
+			if(debug_moves) {
+				for(let i=this.first_move[this.ply]; i<this.first_move[this.ply+1]; ++i) {
+					this.print_move(this.gen_dat[i]);
+				}
 			}
 		}
 	}
@@ -526,7 +574,7 @@ class Board {
 	}
 
 	gen_promote(from, to, bits) {
-		for(let i=Piece.knight; i<=Piece.queen; ++i) {
+		for(let i=PieceType.knight; i<=PieceType.queen; ++i) {
 			let index = this.first_move[this.ply + 1]++;
 			
 			this.gen_dat[index] = {};
@@ -584,7 +632,7 @@ class Board {
 			this.color[to] = this.color[from];
 			this.piece[to] = this.piece[from];
 			this.color[from] = Color.none;
-			this.piece[from] = Piece.none;
+			this.piece[from] = PieceType.none;
 		}
 	
 		/* back up information so we can take the move back later. */
@@ -624,17 +672,17 @@ class Board {
 		else
 			this.piece[m.to] = this.piece[m.from];
 		this.color[m.from] = Color.none;
-		this.piece[m.from] = Piece.none;
+		this.piece[m.from] = PieceType.none;
 	
 		/* erase the pawn if this is an en passant move */
 		if(m.bits & 4) {
 			if(this.side == Color.white) {
 				this.color[m.to + 8] = Color.none;
-				this.piece[m.to + 8] = Piece.none;
+				this.piece[m.to + 8] = PieceType.none;
 			}
 			else {
 				this.color[m.to - 8] = Color.none;
-				this.piece[m.to - 8] = Piece.none;
+				this.piece[m.to - 8] = PieceType.none;
 			}
 		}
 	
@@ -664,12 +712,12 @@ class Board {
 		//this.hash = hist_dat[hply].hash;
 		this.color[m.from] = this.side;
 		if(m.bits & 32)
-			this.piece[m.from] = Piece.pawn;
+			this.piece[m.from] = PieceType.pawn;
 		else
 			this.piece[m.from] = this.piece[m.to];
-		if(this.hist_dat[this.hply].capture == Piece.none) {
+		if(this.hist_dat[this.hply].capture == PieceType.none) {
 			this.color[m.to] = Color.none;
-			this.piece[m.to] = Piece.none;
+			this.piece[m.to] = PieceType.none;
 		}
 		else {
 			this.color[m.to] = this.xside;
@@ -701,18 +749,18 @@ class Board {
 					break;
 			}
 			this.color[to] = this.side;
-			this.piece[to] = Piece.rook;
+			this.piece[to] = PieceType.rook;
 			this.color[from] = Color.none;
-			this.piece[from] = Piece.none;
+			this.piece[from] = PieceType.none;
 		}
 		if(m.bits & 4) {
 			if(this.side == Color.white) {
 				this.color[m.to + 8] = this.xside;
-				this.piece[m.to + 8] = Piece.pawn;
+				this.piece[m.to + 8] = PieceType.pawn;
 			}
 			else {
 				this.color[m.to - 8] = this.xside;
-				this.piece[m.to - 8] = Piece.pawn;
+				this.piece[m.to - 8] = PieceType.pawn;
 			}
 		}
 	}
@@ -721,31 +769,30 @@ class Board {
 		let move_type = "";
 
 		if(m.bits & 1) {
-			move_type += "(cap)";
+			move_type += " cap";
 		}
 		if(m.bits & 2) {
-			move_type += "(csl)";
+			move_type += " csl";
 		}
 		if(m.bits & 4) {
-			move_type += "(ep)";
+			move_type += " ep";
 		}
 		if(m.bits & 8) {
-			move_type += "(p2)";
+			move_type += " pwn2";
 		}
 		if(m.bits & 16) {
-			move_type += "(pwn)";
+			move_type += " pwn";
 		}
 		if(m.bits & 32) {
-			move_type += "(pro";
+			move_type += " pro";
 			switch(m.promote) {
-				case Piece.knight: move_type += " n"; break;
-				case Piece.bishop: move_type += " b"; break;
-				case Piece.rook: move_type += " r"; break;
+				case PieceType.knight: move_type += " n"; break;
+				case PieceType.bishop: move_type += " b"; break;
+				case PieceType.rook: move_type += " r"; break;
 				default: move_type += " q"; break;
 			}
-			move_type += ")";
 		}
-		console.log(Square.to_str(m.from) + " " + Square.to_str(m.to) + move_type);
+		console.log(Square.to_str(m.from) + Square.to_str(m.to) + move_type);
 	}
 
 	perft(depth) {
@@ -793,4 +840,4 @@ class Board {
 	}
 };
 
-export { Board, Color, Piece, Square };
+export { Board, Color, PieceType as Piece, Square };

@@ -1,10 +1,10 @@
 :root {
 	--square-size: 70px;
 	--board-size: calc(var(--square-size) * 8);
-	--piece-size: calc(var(--square-size) * 0.65);
+	--piece-size: calc(var(--square-size) * 0.3);
 	--capture-move: rgb(255, 0, 0, .3);
 	--castle-move: rgba(255, 255, 0, 0.3);
-	--ep-move: rgb(0, 255, 0, .3);
+	--ep-move: rgba(255, 132, 0, 0.3);
 	--promote-move: rgb(255, 0, 0, .3);
 	--move: rgba(4, 204, 249, 0.3);
 }
@@ -56,6 +56,21 @@ path {
 .piece svg {
 	height: var(--piece-size);
 	width: var(--piece-size);
+	position: relative;
+	z-index: -9;
+	fill: white;
+	stroke: black;
+	stroke-width: 2px;
+}
+
+.piece img {
+	width: var(--piece-size);
+	position: relative;
+	z-index: -9;
+}
+
+.piece span {
+	font-size: 3.5rem;
 	position: relative;
 	z-index: -9;
 }
