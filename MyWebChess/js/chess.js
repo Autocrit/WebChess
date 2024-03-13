@@ -533,7 +533,7 @@ class Board {
 					this.gen_push(this.ep - 7, this.ep, 21);
 			}
 		}
-
+/*
 		if(debug_moves != undefined) {
 			if(debug_moves) {
 				for(let i=this.first_move[this.ply]; i<this.first_move[this.ply+1]; ++i) {
@@ -541,6 +541,7 @@ class Board {
 				}
 			}
 		}
+*/
 	}
 
 	gen_push(from, to, bits) {
@@ -765,7 +766,7 @@ class Board {
 		}
 	}
 
-	print_move(m) {
+	move_to_str(m) {
 		let move_type = "";
 
 		if(m.bits & 1) {
@@ -792,7 +793,7 @@ class Board {
 				default: move_type += " q"; break;
 			}
 		}
-		console.log(Square.to_str(m.from) + Square.to_str(m.to) + move_type);
+		return Square.to_str(m.from) + Square.to_str(m.to) + move_type;
 	}
 
 	perft(depth) {
@@ -806,13 +807,13 @@ class Board {
 		for(let i=this.first_move[this.ply]; i<this.first_move[this.ply+1]; ++i) {
 			if(this.makemove(this.gen_dat[i])) {
 				nodes += this.perft(depth - 1);
-
+/*
 				if(debug_moves != undefined) {
 					if(debug_moves) {
 						this.print_move(this.gen_dat[i]);
 					}
 				}
-
+*/
 				this.takeback();
 			}
 		}
@@ -830,6 +831,18 @@ class Board {
 				moves.push(this.gen_dat[i]);
 				this.takeback();
 			}
+		}
+
+		return moves;
+	}
+
+	gen_pseudolegal() {
+		let moves = [];
+
+		this.gen();
+
+		for(let i=this.first_move[this.ply]; i<this.first_move[this.ply+1]; ++i) {
+			moves.push(this.gen_dat[i]);
 		}
 
 		return moves;

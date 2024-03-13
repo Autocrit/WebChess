@@ -149,9 +149,28 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	let fen2 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1";
 	let ep_fen = "4k3/8/8/8/2p5/8/3P4/5K2 w" // ep
 
-	chessboard.set_from_fen(fen2);
+	chessboard.set_from_fen(fen1);
 
 	render_pieces();
 
 	legal_moves = chessboard.gen_legal();
+
+	let moves = chessboard.gen_pseudolegal();
+
+
+	let move_strings = [];
+	for(const move of moves) {
+		move_strings.push(chessboard.move_to_str(move));
+	}
+
+	move_strings.sort(function(a, b) {
+		if(a < b) return -1;
+		if(a > b) return 1;
+
+		return 0;
+	});
+
+	for(const str of move_strings) {
+		console.log(str);
+	}
 });
