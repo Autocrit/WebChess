@@ -4,12 +4,19 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Chess</title>
+	<link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet'>
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<div id="chessboard"></div>
-	<p>It is <span id="player"></span>
-	<p id="info-display"></p>
-	<script src="./js/script.js" type="module"></script>
+	<div class="main">
+		<div><table id="chessboard"></table></div>
+		<div class="input-group">
+			<input id="fen" type="text" class="form-control" value=""></input>
+			<div class="input-group-append mb-1">
+				<button id="fen-button">FEN</button>
+			</div>
+		</div>
+	</div>
+<script src="./js/script.js" type="module"></script>
 </body>
 </html>

@@ -10,24 +10,49 @@
 }
 
 body {
+	font-family: 'Inconsolata', monospace;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	height: 100vh;
-	width: 100vw;
-	background: #1a1a1a;
-	margin: 0;
-	padding: 0;
+	background: #404040;
+}
+
+.main {
+	background: #1f1f1f;
+	margin: 20px;
+	padding: 20px;
 }
 
 #chessboard {
-	width: var(--board-size);
-	height: var(--board-size);
-	display: flex;
-	/*flex-wrap: wrap-reverse;*/
-	flex-wrap: wrap;
+	border-spacing: 0;
+	border-collapse: collapse;
 }
 
+#chessboard th {
+	font-size: .8rem;
+	font-weight: 200;
+	padding: .8em;
+	color: rgb(236, 236, 236);
+}
+
+#chessboard td {
+	/*border: 1px solid;*/
+	width: var(--square-size);
+	height: var(--square-size);
+	position: relative;
+}
+
+#chessboard tr:nth-of-type(odd) td:nth-of-type(odd),
+#chessboard tr:nth-of-type(even) td:nth-of-type(even) {
+	background-color: rgb(162, 162, 162);
+}
+
+#chessboard tr:nth-of-type(odd) td:nth-of-type(even),
+#chessboard tr:nth-of-type(even) td:nth-of-type(odd) {
+	background-color: rgb(238, 238, 238);
+}
+/*
 .square {
 	height: var(--square-size);
 	width: var(--square-size);
@@ -42,7 +67,7 @@ path {
 	position: relative;
 	z-index: -10;
 }
-
+*/
 .piece {
 	height: var(--square-size);
 	width: var(--square-size);
@@ -52,7 +77,7 @@ path {
 	align-items: center;
 	z-index: 9;
 }
-
+/*
 .piece svg {
 	height: var(--piece-size);
 	width: var(--piece-size);
@@ -68,7 +93,7 @@ path {
 	position: relative;
 	z-index: -9;
 }
-
+*/
 .piece span {
 	font-size: 3.5rem;
 	position: relative;
@@ -92,11 +117,55 @@ path {
 }
 
 .overlay {
-	position: fixed;
+	position: absolute;
+	top: 0;
+	left: 0;
 	display: none;
-	width: var(--square-size);
-	height: var(--square-size);
+	width: 100%;
+	height: 100%;
 	background-color: rgba(4, 204, 249, 0.3);
 	/*z-index: 2;
 	cursor: pointer;*/
+}
+
+.input-group {
+	width: 577px;
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+	box-sizing: border-box;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	margin-top: 0.25rem !important;
+}
+
+.form-control {
+	position: relative;
+	flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    margin-bottom: 0;
+	display: block;
+	height: calc(1.8em);
+	padding: 1rem;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #495057;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	box-sizing: border-box;
+	font-family:inherit;
+}
+
+.input-group-append {
+	/*margin-left: -1px;*/
+	display: flex;
+	box-sizing: border-box;
+}
+
+button {
+	font-family: inherit;
 }

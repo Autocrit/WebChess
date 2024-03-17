@@ -4,12 +4,69 @@ let chessboard = new chess.Board();
 let legal_moves = [];
 
 const chessboard_element = document.querySelector("#chessboard");
-const playerDisplayElement = document.querySelector("#player");
-const infoDisplayElement = document.querySelector("#info-display");
+const fen_input = document.querySelector("#fen");
+const fen_button = document.querySelector("#fen-button");
+
+fen_button.addEventListener("click", set_from_fen);
+
 let square_elements = [];
 let overlay_elements = [];
 
+const col_to_file = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ];
+
 function create_board() {
+	// file labels
+	let tr = chessboard_element.insertRow();
+	tr.append(document.createElement("th"));
+	for(let x=0; x<8; x++) {
+		let th = document.createElement("th");
+		tr.append(th);
+		th.textContent = col_to_file[x];
+	}
+	tr.append(document.createElement("th"));
+
+	for(let y=7; y>=0; y--) {
+		let tr = chessboard_element.insertRow();
+
+		let th = document.createElement("th");
+		tr.append(th);
+		th.textContent = y + 1;
+
+		for(let x=0; x<8; x++) {
+			let td = tr.insertCell();
+			tr.append(td);
+			td.id = col_to_file[x] + (y + 1);
+
+			let i = (7 - y) * 8 + x;
+
+			let overlay = document.createElement("div");
+			overlay.classList.add("overlay");
+			td.append(overlay);
+			overlay_elements[i] = overlay;
+	
+			td.addEventListener("dragstart", drag_start);
+			td.addEventListener("dragover", drag_over);
+			td.addEventListener("drop", drag_drop);
+
+			square_elements[i] = td;
+		}
+
+		th = document.createElement("th");
+		tr.append(th);
+		th.textContent = y + 1;
+	}
+
+	// file labels
+	tr = chessboard_element.insertRow();
+	tr.append(document.createElement("th"));
+	for(let x=0; x<8; x++) {
+		let th = document.createElement("th");
+		tr.append(th);
+		th.textContent = col_to_file[x];
+	}
+	tr.append(document.createElement("th"));
+
+/*
 	for(let i=0; i<64; i++) {
 		let square = document.createElement("div");
 		square.classList.add("square");
@@ -35,6 +92,7 @@ function create_board() {
 
 		square_elements[i] = square;
 	}
+*/
 }
 
 function render_pieces() {
@@ -57,14 +115,18 @@ function render_pieces() {
 		if(chessboard.color[i] != chess.Color.none) {
 			let piece = document.createElement("div");
 			piece.classList.add("piece");
+
+			// SVG
 			//piece.innerHTML = chess.Piece.get_svg(chessboard.piece[i]);
+
+			// PNG
 			//let png = chess.Piece.get_png(chessboard.color[i], chessboard.piece[i]);
 			//let image = document.createElement("img");
 			//image.src = png;
 			//image.classList.add("piece-img");
 			//piece.append(image);
-			//piece.firstChild.classList = chessboard.color[i] === chess.Color.white ? "white-piece" : "black-piece";
 
+			// Unicode
 			let span = document.createElement("span");
 			piece.append(span);
 			span.textContent = chess.Piece.unicode(chessboard.color[i], chessboard.piece[i]);
@@ -76,11 +138,9 @@ function render_pieces() {
 }
 
 let from_sq = undefined;
-let dragged_element = undefined;
 
-function dragStart(e) {
+function drag_start(e) {
 	from_sq = chess.Square.from_str(this.id);
-	dragged_element = e.target;
 
 	// Get legal moves from this square
 	let moves = legal_moves.filter(move => move.from === from_sq);
@@ -104,12 +164,12 @@ function dragStart(e) {
 	}
 }
 
-function dragOver(e) {
+function drag_over(e) {
 	e.preventDefault();
 	e.dataTransfer.dropEffect = "move";
 }
 
-function dragDrop(e) {
+function drag_drop(e) {
 	//e.stopPropagation();
 	e.preventDefault();
 
@@ -135,28 +195,16 @@ function dragDrop(e) {
 
 }
 
-function perft() {
-	let depth = 5;
-	let nodes = chessboard.perft(depth);
+function set_from_fen(e) {
+	let fen = fen_input.value;
 
-	console.log("perft d" + depth + ": " + nodes)
-}
-
-document.addEventListener("DOMContentLoaded", (event) => {
-	create_board();
-
-	let fen1 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
-	let fen2 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1";
-	let ep_fen = "4k3/8/8/8/2p5/8/3P4/5K2 w" // ep
-
-	chessboard.set_from_fen(fen1);
+	chessboard.set_from_fen(fen);
 
 	render_pieces();
 
 	legal_moves = chessboard.gen_legal();
 
 	let moves = chessboard.gen_pseudolegal();
-
 
 	let move_strings = [];
 	for(const move of moves) {
@@ -170,7 +218,29 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		return 0;
 	});
 
+	console.log("****************");
 	for(const str of move_strings) {
 		console.log(str);
 	}
+	console.log("****************");
+}
+
+function perft() {
+	let depth = 5;
+	let nodes = chessboard.perft(depth);
+
+	console.log("perft d" + depth + ": " + nodes)
+}
+
+document.addEventListener("DOMContentLoaded", (event) => {
+	create_board();
+
+	fen_input.value = chess.Board.start_fen;
+
+	set_from_fen();
+
+	//let fen1 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
+	//let fen2 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1";
+	//let ep_fen = "4k3/8/8/8/2p5/8/3P4/5K2 w" // ep
+
 });
