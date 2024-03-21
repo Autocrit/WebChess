@@ -120,16 +120,16 @@ function render_pieces() {
 			//piece.innerHTML = chess.Piece.get_svg(chessboard.piece[i]);
 
 			// PNG
-			//let png = chess.Piece.get_png(chessboard.color[i], chessboard.piece[i]);
-			//let image = document.createElement("img");
-			//image.src = png;
-			//image.classList.add("piece-img");
-			//piece.append(image);
+			let png = chess.Piece.get_png(chessboard.color[i], chessboard.piece[i]);
+			let image = document.createElement("img");
+			image.src = png;
+			image.classList.add("piece-img");
+			piece.append(image);
 
 			// Unicode
-			let span = document.createElement("span");
-			piece.append(span);
-			span.textContent = chess.Piece.unicode(chessboard.color[i], chessboard.piece[i]);
+			//let span = document.createElement("span");
+			//piece.append(span);
+			//span.textContent = chess.Piece.unicode(chessboard.color[i], chessboard.piece[i]);
 
 			piece.setAttribute("draggable", "true");
 			square.append(piece);
@@ -190,7 +190,7 @@ function drag_drop(e) {
 		}
 	}
 	else {
-		console.log("Illegal move");
+		//console.log("Illegal move");
 	}
 
 }

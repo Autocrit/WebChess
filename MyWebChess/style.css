@@ -1,7 +1,7 @@
 :root {
-	--square-size: 70px;
-	--board-size: calc(var(--square-size) * 8);
-	--piece-size: calc(var(--square-size) * 0.3);
+	--square-size: 40;
+	--board-size: calc(var(--square-size) * 8 * 1px);
+	--piece-size: calc(var(--square-size) * .9);
 	--capture-move: rgb(255, 0, 0, .3);
 	--castle-move: rgba(255, 255, 0, 0.3);
 	--ep-move: rgba(255, 132, 0, 0.3);
@@ -38,8 +38,8 @@ body {
 
 #chessboard td {
 	/*border: 1px solid;*/
-	width: var(--square-size);
-	height: var(--square-size);
+	width: calc(var(--square-size) * 1px);
+	height: calc(var(--square-size) * 1px);
 	position: relative;
 }
 
@@ -69,8 +69,8 @@ path {
 }
 */
 .piece {
-	height: var(--square-size);
-	width: var(--square-size);
+	height: calc(var(--square-size) * 1px);
+	width: calc(var(--square-size) * 1px);
 	position: relative;
 	display: flex;
 	justify-content: center;
@@ -87,15 +87,16 @@ path {
 	stroke: black;
 	stroke-width: 2px;
 }
-
+*/
 .piece img {
-	width: var(--piece-size);
+	/*transform: scale(0.035);*/
+	transform: scale(calc(var(--square-size) * 0.000875));
 	position: relative;
 	z-index: -9;
 }
-*/
+
 .piece span {
-	font-size: 3.5rem;
+	font-size: var(--piece-size);
 	position: relative;
 	z-index: -9;
 }
@@ -129,43 +130,39 @@ path {
 }
 
 .input-group {
-	width: 577px;
-	position: relative;
+	/*width: 577px;*/
+	width: calc(var(--board-size) + 20px);
+	/*position: relative;*/
 	display: flex;
-	flex-wrap: wrap;
-	align-items: stretch;
-	box-sizing: border-box;
-	margin-left: auto !important;
-	margin-right: auto !important;
-	margin-top: 0.25rem !important;
+	/*flex-wrap: wrap;
+	/*align-items: stretch;*/
+	/*box-sizing: border-box;*/
+	margin-left: auto;
+	margin-right: auto;
+	/*margin-top: 0.25rem !important;*/
 }
 
-.form-control {
-	position: relative;
+.text-input {
+	/*position: relative;*/
 	flex: 1 1 auto;
-    width: 1%;
-    min-width: 0;
-    margin-bottom: 0;
-	display: block;
-	height: calc(1.8em);
-	padding: 1rem;
+    /*width: 1%;*/
+    /*min-width: 0;*/
+    /*margin-bottom: 0;*/
+	/*display: block;*/
+	height: 1.5em;
+	padding: .8rem;
 	font-size: 1rem;
-	font-weight: 400;
-	line-height: 1.5;
-	color: #495057;
+	/*font-weight: 400;*/
+	/*line-height: 1.5;*/
+	/*color: #495057;*/
 	background-color: #fff;
-	background-clip: padding-box;
-	border: 1px solid #ced4da;
+	/*background-clip: padding-box;*/
+	/*border: 1px solid #ced4da;*/
 	box-sizing: border-box;
 	font-family:inherit;
 }
 
-.input-group-append {
-	/*margin-left: -1px;*/
-	display: flex;
-	box-sizing: border-box;
-}
-
 button {
 	font-family: inherit;
+	height: 2.1em;
 }

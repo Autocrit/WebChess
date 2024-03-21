@@ -1,3 +1,6 @@
+// Chess ppieces by JohnPablok
+// https://opengameart.org/content/chess-pieces-and-board-squares
+
 const debug_moves = true;
 
 class Color {
