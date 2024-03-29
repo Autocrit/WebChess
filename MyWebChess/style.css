@@ -1,5 +1,5 @@
 :root {
-	--square-size: 40;
+	--square-size: 60;
 	--board-size: calc(var(--square-size) * 8 * 1px);
 	--piece-size: calc(var(--square-size) * .9);
 	--capture-move: rgb(255, 0, 0, .3);
@@ -88,12 +88,22 @@ path {
 	stroke-width: 2px;
 }
 */
+
+/* when img is svg */
 .piece img {
-	/*transform: scale(0.035);*/
+	transform: scale(calc(var(--square-size) * .01));
+	position: relative;
+	z-index: -9;
+}
+
+/*
+.piece img {
+	transform: scale(0.035);
 	transform: scale(calc(var(--square-size) * 0.000875));
 	position: relative;
 	z-index: -9;
 }
+*/
 
 .piece span {
 	font-size: var(--piece-size);
@@ -102,11 +112,11 @@ path {
 }
 
 .white-square {
-	background-color: rgb(238, 238, 238);
+	background-color: #595959;
 }
 
 .black-square {
-	background-color: rgb(162, 162, 162);
+	background-color: #363636;
 }
 
 .black-piece {

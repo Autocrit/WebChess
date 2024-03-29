@@ -14,6 +14,54 @@ let overlay_elements = [];
 
 const col_to_file = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ];
 
+const svg = [
+	[
+		"pieces/svg/w_pawn_svg_withShadow.svg",
+		"pieces/svg/w_knight_svg_withShadow.svg",
+		"pieces/svg/w_bishop_svg_withShadow.svg",
+		"pieces/svg/w_rook_svg_withShadow.svg",
+		"pieces/svg/w_queen_svg_withShadow.svg",
+		"pieces/svg/w_king_svg_withShadow.svg",
+	],
+	[
+		"pieces/svg/b_pawn_svg_withShadow.svg",
+		"pieces/svg/b_knight_svg_withShadow.svg",
+		"pieces/svg/b_bishop_svg_withShadow.svg",
+		"pieces/svg/b_rook_svg_withShadow.svg",
+		"pieces/svg/b_queen_svg_withShadow.svg",
+		"pieces/svg/b_king_svg_withShadow.svg",
+	]
+];
+
+/*
+function get_png(color, type) {
+	const png = [
+		[
+			"pieces/white_pawn.png",
+			"pieces/white_knight.png",
+			"pieces/white_bishop.png",
+			"pieces/white_rook.png",
+			"pieces/white_queen.png",
+			"pieces/white_king.png"
+		],
+		[
+			"pieces/black_pawn.png",
+			"pieces/black_knight.png",
+			"pieces/black_bishop.png",
+			"pieces/black_rook.png",
+			"pieces/black_queen.png",
+			"pieces/black_king.png"
+		]
+	];
+
+	return png[color][type];
+}
+*/
+
+function get_svg(color, type) {
+	return svg[color][type];
+}
+
 function create_board() {
 	// file labels
 	let tr = chessboard_element.insertRow();
@@ -118,13 +166,18 @@ function render_pieces() {
 
 			// SVG
 			//piece.innerHTML = chess.Piece.get_svg(chessboard.piece[i]);
-
-			// PNG
-			let png = chess.Piece.get_png(chessboard.color[i], chessboard.piece[i]);
+			let svg = get_svg(chessboard.color[i], chessboard.piece[i]);
 			let image = document.createElement("img");
-			image.src = png;
+			image.src = svg;
 			image.classList.add("piece-img");
 			piece.append(image);
+
+			// PNG
+			//let png = chess.Piece.get_png(chessboard.color[i], chessboard.piece[i]);
+			//let image = document.createElement("img");
+			//image.src = png;
+			//image.classList.add("piece-img");
+			//piece.append(image);
 
 			// Unicode
 			//let span = document.createElement("span");
